@@ -1,4 +1,6 @@
 -- Ejemplo facturas.
+-- 2 tablas, relación 1 cliente n facturas.
+-- Fuentes relacionadas, más completas:
 -- http://www.hermosaprogramacion.com/2014/07/sistema-facturacion-base-datos/
 -- http://basededatos.umh.es/ejercicios/facturacion/ejercicio.htm
 
