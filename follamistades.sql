@@ -1,10 +1,8 @@
-CREATE DATABASE IF NOT EXISTS facturacion;
-USE facturacion;
-
 DROP TABLE IF EXISTS personas;
 CREATE TABLE personas (
 	nombre VARCHAR(40) NOT NULL DEFAULT '',
 	genero VARCHAR(1) NOT NULL DEFAULT '',
+	fechaNacimiento TIMESTAMP NOT NULL,
 	PRIMARY KEY (nombre)
 )
 COLLATE='latin1_swedish_ci'
@@ -15,7 +13,7 @@ DROP TABLE IF EXISTS follamistades;
 CREATE TABLE follamistades (
 	nombre1 VARCHAR(40) NOT NULL DEFAULT '',
 	nombre2 VARCHAR(40) NOT NULL DEFAULT '',
-	fechaInicio TIMESTAMP NOT NULL DEFAULT '2015-01-01',
+	fechaInicio TIMESTAMP NOT NULL,
 	PRIMARY KEY (nombre1,nombre2)
 )
 COLLATE='latin1_swedish_ci'
@@ -23,14 +21,19 @@ ENGINE=InnoDB
 ;
 
 INSERT INTO PERSONAS VALUES
-	('Laura','F'),('Jordi','M'),('Ana','F'),
-	('Angel','M'),('Manolo','M'),('Judit','F'),
-	('Javi','M'),('Toni','M'),('Marta','F'),
-	('Enrique','M'),('David','M');
+	('Laura','F','1989-06-11'),('Jordi','M','1985-10-11'),
+	('Ana','F','1991-05-01'),('Angel','M','1986-12-20'),
+	('Manolo','M','1978-08-16'),('Judit','F','1981-09-02'),
+	('Javi','M','1987-04-21'),('Toni','M','1980-11-20'),
+	('Marta','F','1983-12-16'),('Enrique','M','1976-09-23'),
+	('David','M','1982-10-12'),('Sandra','F','1993-08-25');
 	
 INSERT INTO PERSONAS VALUES
-	('Tere','F'),('Martin','M'),('Sara','F'),
-	('Juan','M'),('Fernando','M'),('Clara','F');
+	('Tere','F','1979-07-21'),('Martin','M','1986-12-12'),
+	('Sara','F','1990-06-15'),('Juan','M','1988-05-20'),
+	('Fernando','M','1977-02-27'),('Clara','F','1987-06-21'),
+	('Lola','F','1979-07-21'),('Alberto','M','1992-10-21'),
+	('Victor','M','1984-05-30'),('Raquel','F','1985-11-30');
 	
 -- Número y porcentaje de Hombres y mujeres.
 select count(genero),
@@ -56,9 +59,7 @@ INSERT INTO FOLLAMISTADES VALUES
 	 where p.nombre=f.nombre1 or p.nombre=f.nombre2
  );
  
- select nombre from personas where genero='f'
- 
- -- Lista de follamistad homosexuales
+ -- Lista de follamistades homosexuales
   select f.nombre1,f.nombre2 from follamistades as f
   where -- Lesbianas
   f.nombre1 in (select nombre from personas where genero='f') and 
@@ -66,3 +67,9 @@ INSERT INTO FOLLAMISTADES VALUES
   or -- Gays
   f.nombre1 in (select nombre from personas where genero='m') and 
   f.nombre2 in (select nombre from personas where genero='m'); 
+  
+  -- Acualización necesaria para una persona que se cambia de genero.
+  update personas
+  SET nombre='Victoria', genero='F'
+  where nombre='Victor';
+  
