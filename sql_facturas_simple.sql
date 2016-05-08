@@ -1,5 +1,6 @@
--- Ejemplo simplificado de gestión de facturas.
--- 2 tablas, relación 1 cliente n facturas.
+-- Ejemplo facturas.
+-- http://www.hermosaprogramacion.com/2014/07/sistema-facturacion-base-datos/
+-- http://basededatos.umh.es/ejercicios/facturacion/ejercicio.htm
 
 CREATE DATABASE IF NOT EXISTS facturacion;
 USE facturacion;
@@ -18,10 +19,10 @@ DROP TABLE IF EXISTS facturas;
  CREATE TABLE facturas (
 	idfactura INT(11) NOT NULL,
 	idcliente VARCHAR(10) NOT NULL,
-	fechacobro FLOAT NULL DEFAULT NULL,
+	fechacobro TIMESTAMP NULL DEFAULT NULL,
 	importe FLOAT NULL DEFAULT NULL,
 	PRIMARY KEY (idfactura,idcliente),
-	CONSTRAINT pedidos_ibfk_1 FOREIGN KEY (idcliente) REFERENCES clientes (idcliente) ON UPDATE CASCADE
+	CONSTRAINT idcliente_fk FOREIGN KEY (idcliente) REFERENCES clientes (idcliente) ON UPDATE CASCADE
 )
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
@@ -30,11 +31,18 @@ ENGINE=InnoDB
 INSERT INTO clientes (idcliente,nombre) VALUES 
  ('345F','Electrocity'),
  ('845Z','Bazaar del mar');
+INSERT INTO clientes (idcliente,nombre) VALUES 
+ ('603P','Phonehome'),
+ ('142B','Blacksmith');
 
 INSERT INTO facturas (idfactura,idcliente,importe) VALUES 
  (101,'345F',22.25),
  (102,'845Z',44.00),
  (103,'345F',7.50);
+ 
+ INSERT INTO facturas (idfactura,idcliente,fechacobro,importe) VALUES 
+ (104,'603P','20160306',8.90),
+ (105,'603P','20160401',24.20);
  
  -- Consultas
  -- Lista clientes
@@ -61,11 +69,25 @@ INSERT INTO facturas (idfactura,idcliente,importe) VALUES
  -- Datos factura más cara.
  select idFactura,idCliente,max(importe) as 'Importe' from facturas;
  
- -- Próximamente
- -- Facturas cobradas en 2015.
+ -- Facturas cobradas en el año 2015.
+ select * from facturas
+ where fechaCobro > '2014-12-31' 
+ and fechaCobro < '2016-01-01';
  
  -- Actualizaciones
- -- Cambiar nombre cliente
- -- Cliente paga factura
- -- Descontar importe facturas a un cliente el 20%.
  
+ -- Cambiar nombre cliente
+ update clientes
+ SET NOMBRE = 'Black Smith'
+ WHERE NOMBRE = 'Blacksmith';
+ 
+ -- Acualizar la fecha de cobro cuando el Cliente paga sus facturas el mismo dia.
+ update facturas
+ SET fechaCobro = curdate()
+ WHERE idCliente = '845Z';
+ 
+ -- Actualizar importe facturas a un cliente para descontarle un 20%
+ -- en todas sus facturas.
+  update facturas
+ SET importe = importe * 0.8
+ WHERE idCliente = '845Z';
