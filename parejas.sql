@@ -9,8 +9,8 @@ COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 ;
 
-DROP TABLE IF EXISTS follamistades;
-CREATE TABLE follamistades (
+DROP TABLE IF EXISTS parejas;
+CREATE TABLE parejas (
 	nombre1 VARCHAR(40) NOT NULL DEFAULT '',
 	nombre2 VARCHAR(40) NOT NULL DEFAULT '',
 	fechaInicio TIMESTAMP NOT NULL,
@@ -41,26 +41,26 @@ count(genero) / (select count(*) from PERSONAS)
 from PERSONAS
 group by genero;
 
-INSERT INTO FOLLAMISTADES VALUES
+INSERT INTO PAREJAS VALUES
 	('Laura','David','2014-07-08'),('Enrique','Javi','2014-09-03'),
 	('Toni','Ana','2015-06-14'),('Ana','Manolo','2015-02-18');
-INSERT INTO FOLLAMISTADES VALUES	
+INSERT INTO PAREJAS VALUES	
 	('Clara','Sara','2015-11-11'),('Fernando','Judit','2016-01-01');
  
- -- Lista de personas que viven una follamistad.
- select p.nombre from follamistades as f, personas as p
+ -- Lista de personas que viven una pareja.
+ select p.nombre from parejas as f, personas as p
  where p.nombre=f.nombre1 or p.nombre=f.nombre2
 
- -- lista de personas que no tienen el placer de vivir
- -- ninguna follamistad.
+ -- lista de personas que no estan viviendo
+ -- ninguna relación de pareja.
  select p1.nombre from personas as p1
  where p1.nombre not in(
-	 select p.nombre from follamistades as f, personas as p
+	 select p.nombre from parejas as f, personas as p
 	 where p.nombre=f.nombre1 or p.nombre=f.nombre2
  );
  
- -- Lista de follamistades homosexuales
-  select f.nombre1,f.nombre2 from follamistades as f
+ -- Lista de parejas homosexuales
+  select f.nombre1,f.nombre2 from parejas as f
   where -- Lesbianas
   f.nombre1 in (select nombre from personas where genero='f') and 
   f.nombre2 in (select nombre from personas where genero='f')
