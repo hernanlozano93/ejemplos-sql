@@ -16,7 +16,7 @@ Como recursos de referencia he usado:
 http://www.hermosaprogramacion.com/2014/07/sistema-facturacion-base-datos/
 http://basededatos.umh.es/ejercicios/facturacion/ejercicio.htm
 
-## sql_parejas.sql
+### sql_parejas.sql
 Este es un ejemplo más original y divertido. Parejas es un ejemplo muy típico de relación reflexiva entre dos elementos de una misma tabla (dos elementos de la tabla persona). Contiene ejemplos interesantes de porcentajes y subconsulta.
 
 ### ejemplos_springjdbc.sql
