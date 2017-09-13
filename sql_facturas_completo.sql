@@ -14,9 +14,7 @@ CREATE TABLE tclientes (
 	idcliente VARCHAR(10) NOT NULL DEFAULT '',
 	nombre VARCHAR(50) NULL DEFAULT NULL,
 	PRIMARY KEY (idcliente)
-)
-COLLATE='latin1_swedish_ci'
-ENGINE=InnoDB;
+) COLLATE='latin1_swedish_ci' ENGINE=InnoDB;
  
 DROP TABLE IF EXISTS tfacturas;
  CREATE TABLE tfacturas (
@@ -25,10 +23,9 @@ DROP TABLE IF EXISTS tfacturas;
 	fechacobro TIMESTAMP NULL DEFAULT NULL,
 	importe FLOAT NULL DEFAULT NULL,
 	PRIMARY KEY (idfactura,idcliente),
-	CONSTRAINT idcliente_fk FOREIGN KEY (idcliente) REFERENCES tclientes (idcliente) ON UPDATE CASCADE
-)
-COLLATE='latin1_swedish_ci'
-ENGINE=InnoDB;
+	CONSTRAINT idcliente_fk FOREIGN KEY (idcliente) REFERENCES tclientes (idcliente) 
+	ON UPDATE CASCADE
+) COLLATE='latin1_swedish_ci' ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tlineasfactura;
 CREATE TABLE tlineasfactura (
@@ -38,7 +35,9 @@ CREATE TABLE tlineasfactura (
 	precio FLOAT NULL DEFAULT NULL,
 	idproducto INT(11) NOT NULL,
 	PRIMARY KEY (idfactura,idlineafactura),
-	CONSTRAINT idfactura_fk FOREIGN KEY (idfactura) REFERENCES tfacturas (idfactura) ON UPDATE CASCADE
+	CONSTRAINT idfactura_fk FOREIGN KEY (idfactura) REFERENCES tfacturas (idfactura) 
+	ON UPDATE CASCADE
+	ON DELETE CASCADE
 -- CONSTRAINT idproducto_fk FOREIGN KEY (idproducto) REFERENCES tproductos (idproducto)
 ) COLLATE='latin1_swedish_ci' ENGINE=InnoDB;
 
@@ -53,9 +52,13 @@ CREATE TABLE tproductos (
 
 
 INSERT INTO tclientes (idcliente,nombre) VALUES 
- ('345F','Casa Avellaner'),('845Z','Racó del Tibet'),('293L','Thai Best Food');
+ ('345F','Casa Avellaner'),
+ ('845Z','Racó del Tibet'),
+ ('293L','Thai Best Food');
 INSERT INTO tclientes (idcliente,nombre) VALUES 
- ('603P','Toriyama Land'),('142B','Asador Urugayo'),('348D','Meggy Liz');
+ ('603P','Toriyama Land'),
+ ('142B','Asador Urugayo'),
+ ('348D','Meggy Liz');
 
 INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES 
  (101,'345F',10.5),
@@ -68,17 +71,23 @@ INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES
  
  INSERT INTO tlineasfactura (idlineafactura,idfactura,cantidad,precio,idproducto) VALUES 
  (1,101,3,10.5,1),
- (1,102,6,21.0,2),(2,102,1,7.0,3),
+ (1,102,6,21.0,2),
+ (2,102,1,7.0,3),
  (1,104,2,10.40,4),
- (1,103,2,7.0,1),(2,103,1,6.75,7);
+ (1,103,2,7.0,1),
+ (2,103,1,6.75,7);
  
  INSERT INTO tproductos (idproducto,nombre,preciouni,stock) VALUES
  (1,'Avellanes del tros',3.5,6),
- (2,'Te Dharamsala',1.75,13),(3,'Sherpa momos',7.0,51),
+ (2,'Te Dharamsala',1.75,13),
+ (3,'Sherpa momos',7.0,51),
  (4,'Yokohama Green Algae',5.2,1),
  (5,'Licor de aguacate y guarana.',12.8,21),
- (6,'Pimientos picantes',2.25,4),(7,'Vi del Priorat',6.75,9),
- (8,'Cheers Cute Burguers',4.75,69);
+ (6,'Pimientos picantes',2.25,4),
+ (7,'Vi del Priorat',6.75,9),
+ (8,'Cheers Cute Burguers',4.75,69),
+ (9,'Tofu Hacendado',1.75,25),
+ (10,'Cerveza beer',1.50,123);
  
  -- Consultas
  -- Lista tclientes
@@ -142,6 +151,21 @@ INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES
  
  -- Actualizar importe tfacturas a un cliente para descontarle un 20%
  -- en todas sus tfacturas.
-  update tfacturas
- SET importe = importe * 0.8
- WHERE idCliente = '845Z';
+update tfacturas
+SET importe = importe * 0.8
+WHERE idCliente = '845Z';
+
+-- Borrar producto por nombre. 
+ delete from tproductos
+ WHERE nombre = 'Cheers Cute Burguers;
+ 
+ -- Borrar productos por idproducto. 
+delete from tproductos
+ WHERE idproducto IN (1,4,5);
+
+ -- Borrar un cliente del sistema.
+ -- Como no hemos puesto ON DELETE CASCADE hay que borrar primero sus facturas.
+delete from tfacturas
+ WHERE idcliente = '845Z';
+delete from tclientes
+ WHERE idcliente = '845Z';
