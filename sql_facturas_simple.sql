@@ -47,8 +47,16 @@ INSERT INTO facturas (idfactura,idcliente,importe) VALUES
  (105,'603P','20160401',24.20);
  
  -- Consultas
+ 
  -- Lista clientes
  select * from clientes;
+ 
+  -- Nombre y precio productos más baratos de 1.5
+ select nombre,preciouni from tproductos where preciouni<=1.50;
+ 
+  -- id y Nombre productos sin stock
+select nombre,preciouni from tproductos where stock=0;
+ 
  -- Lista clientes cuyo nombre empieza por E.
   select * from clientes 
   where nombre LIKE 'E%';
@@ -93,3 +101,10 @@ INSERT INTO facturas (idfactura,idcliente,importe) VALUES
   update facturas
  SET importe = importe * 0.8
  WHERE idCliente = '845Z';
+ 
+-- Borrar un cliente del sistema.
+delete from tclientes
+WHERE idcliente = '845Z';
+
+-- Borrar todos los clientes.
+delete from tclientes;
