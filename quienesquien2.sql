@@ -60,3 +60,26 @@ from PERSONAS group by GENERO;
 select GAFAS, count(GAFAS) AS 'Numero',
 count(GAFAS) / (select count(*) from PERSONAS) * 100 AS 'Porcentaje'
 from PERSONAS group by GAFAS;
+
+-- Tratamiento de fechas.
+CREATE TABLE PERSONAS2
+    (`nombre` varchar(20), `genero` varchar(1),
+     `tipo_pelo` varchar(15), `gafas` varchar(1), nacimiento timestamp);
+     
+INSERT INTO PERSONAS2 VALUES
+	('Alberto', 'H', 'BLA', 'N','1985-10-11'),
+	('Carla', 'M', 'MOR', 'S','1981-03-11'),
+	('Andrea','O','PEL','N','1992-12-01'),
+	('Mercedes', 'M', 'RUB', 'N','1977-01-23'),
+        ('Enrique', 'H', 'CAS', 'N','1989-06-29'),
+	('Mickey','O','MOR','S','1986-04-13'),
+;
+
+-- Mostrar edad a partir fecha de nacimiento
+SELECT nombre, nacimiento, CURDATE(),
+    (YEAR(CURDATE())-YEAR(nacimiento)) - (RIGHT(CURDATE(),5)<RIGHT(nacimiento,5))
+    AS nacimiento FROM PERSONAS2 ORDER BY nacimiento;
+
+-- Mostrar nombre y fecha de nac. mayores de 30 años
+SELECT nombre, DATE_FORMAT(nacimiento, "%d/%m/%Y") FROM PERSONAS2 
+WHERE (YEAR(CURDATE())-YEAR(BirthDate))>=30 ORDER BY nacimiento;
