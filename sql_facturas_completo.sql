@@ -50,7 +50,6 @@ CREATE TABLE tproductos (
 	PRIMARY KEY (idproducto)
 ) COLLATE='latin1_swedish_ci' ENGINE=InnoDB;
 
-
 INSERT INTO tclientes (idcliente,nombre) VALUES 
  ('345F','Casa Avellaner'),
  ('845Z','Racó del Tibet'),
@@ -90,8 +89,16 @@ INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES
  (10,'Cerveza beer',1.50,123);
  
  -- Consultas
+ 
  -- Lista tclientes
  select * from tclientes;
+ 
+ -- Nombre y precio productos más baratos de 1.5
+ select nombre,preciouni from tproductos where preciouni<=1.50;
+ 
+  -- id y Nombre productos sin stock
+ select nombre,preciouni from tproductos where stock=0;
+  
  -- Lista tclientes cuyo nombre empieza por E.
   select * from tclientes 
   where nombre LIKE 'E%';
@@ -109,15 +116,18 @@ INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES
  
  -- Lista de tclientes que no han pagado tfacturas; es decir,
  -- que la fecha de cobro de sus tfacturas no se ha definido.
-  select idFactura,idCliente,importe from tfacturas 
+  select idfactura,idcliente,importe from tfacturas 
   where fechacobro IS NULL;
    
  -- tfacturas ordenadas por precio de menor a mayor.
-  select idFactura,idCliente,importe from tfacturas
+  select idfactura,idcliente,importe from tfacturas
   order by importe;
   
  -- Datos factura más cara.
- select idFactura,idCliente,max(importe) as 'Importe' from tfacturas;
+ select idfactura,idcliente,max(importe) as 'Importe' from tfacturas;
+ 
+  -- Suma importe facturas de un cliente.
+ select idfactura,idcliente,sum(importe) as 'Importe' from tfacturas where idCliente='345F';
  
  -- tfacturas cobradas en el año 2015.
  select * from tfacturas
@@ -129,6 +139,11 @@ INSERT INTO tfacturas (idfactura,idcliente,importe) VALUES
  from tlineasfactura as lf 
  inner join tproductos as p on lf.idproducto=p.idproducto
  where lf.idfactura=102; 
+ 
+   -- Datos primera factura de un cliente por nombre (inner join 2 tablas)
+ select tf.idfactura,tc.idcliente,min(tf.importe) as 'Importe' 
+ from tfacturas tf, tclientes tc where tc.idcliente = tf.idcliente
+ and tc.nombre='Casa Avellaner';
  
  -- Consultar los productos de las facturas de un cliente. (inner join 3 tablas)
  select f.idfactura,lf.idlineafactura,lf.cantidad,lf.precio,p.nombre,f.fechacobro
@@ -157,11 +172,11 @@ WHERE idCliente = '845Z';
 
 -- Borrar producto por nombre. 
  delete from tproductos
- WHERE nombre = 'Cheers Cute Burguers;
+ WHERE nombre = 'Cheers Cute Burguers';
  
  -- Borrar productos por idproducto. 
 delete from tproductos
- WHERE idproducto IN (1,4,5);
+WHERE idproducto IN (1,4,5);
 
  -- Borrar un cliente del sistema.
  -- Como no hemos puesto ON DELETE CASCADE hay que borrar primero sus facturas.
