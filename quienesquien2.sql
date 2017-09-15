@@ -1,19 +1,19 @@
 CREATE TABLE PERSONAS
-	(`nombre` varchar(20), `genero` varchar(1),
+    (`nombre` varchar(20), `genero` varchar(1),
      `tipo_pelo` varchar(15), `gafas` varchar(1));
 
 INSERT INTO PERSONAS VALUES
 	('Roberto', 'H', 'BLA', 'N'),
 	('Carla', 'M', 'MOR', 'S'),
 	('Mercedes', 'M', 'RUB', 'N'),
-    ('Enrique', 'H', 'CAS', 'N'),
+        ('Enrique', 'H', 'CAS', 'N'),
 	('Albert','H','SIN','N'),
 	('Carla','M','MOR','S'),
 	('Marta','M','MOR','N'),
 	('Roger','H','RUB','S'),
 	('Elisabet','M','CAS','S'),
 	('Oriol','H','MOR','N'),
-	('Lola','M','BLA','S'),
+	('Lola','O','BLA','S'),
 	('Sara','M','RUB','S'),
 	('Jose','H','BLA','S'),
 	('Adriana','M','RUB','N'),
@@ -26,11 +26,11 @@ INSERT INTO PERSONAS VALUES
 	('David','M','PEL','N'),
 	('Elena','M','PEL','S'),
 	('Nadia','M','RUB','N'),
+	('Alex','O','MOR','S')
 ;
 
 -- Consultas de criterios-.
 
--- Tipo de pelo RUB.
 SELECT * FROM PERSONAS WHERE TIPO_PELO='RUB';
 
 SELECT * FROM PERSONAS WHERE TIPO_PELO='MOR' AND GAFAS='N';
@@ -42,6 +42,10 @@ SELECT * FROM PERSONAS
 WHERE GENERO='M' AND 
 	TIPO_PELO='RUB' AND 
 	GAFAS='S';
+
+-- Consulta generos no binarios
+SELECT * FROM PERSONAS 
+WHERE GENERO<>'M' AND GENERO<>'H';
 
 -- Consultas de porcentajes.
 
